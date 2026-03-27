@@ -1,103 +1,83 @@
-Stateless & Stateful Widgets Demo (Flutter)
+Flutter Development Tools Demo
 Project Overview
 
-This project demonstrates the fundamental concepts of StatelessWidget and StatefulWidget in Flutter by building a simple interactive application.
-
-The app highlights the difference between static and dynamic UI components and shows how Flutter efficiently updates only the required parts of the interface.
+This project demonstrates the use of essential Flutter development tools, including Hot Reload, Debug Console, and Flutter DevTools. These tools help developers build, debug, and optimize applications efficiently by providing real-time feedback and performance insights.
 
 Objective
-Understand the difference between Stateless and Stateful widgets
-Learn when to use each type
-Build an interactive UI combining both concepts
-Observe UI updates based on user interaction
-Concepts Explained
-Stateless Widget
+Understand how Flutter’s Hot Reload works
+Use Debug Console for logging and debugging
+Explore Flutter DevTools for inspection and performance analysis
+Demonstrate an efficient development workflow
+1. Hot Reload
+   What is Hot Reload?
 
-A StatelessWidget is immutable, meaning its UI does not change once it is built.
+Hot Reload allows developers to instantly apply code changes to a running Flutter application without restarting it. This helps maintain the app’s current state while updating the UI.
 
-Use Cases:
-Static text
-Icons
-Headers
-Layout structures
-Example:
-class HeaderWidget extends StatelessWidget {
-const HeaderWidget({super.key});
+Steps to Use Hot Reload
 
-@override
-Widget build(BuildContext context) {
-return const Text(
-"Interactive Counter App",
-style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-);
-}
-}
+Run the app using:
 
-This widget remains unchanged unless rebuilt by its parent.
+flutter run
+Modify any widget (text, color, layout, etc.)
+Save the file or press r in the terminal
+Changes appear instantly in the app
+Example
+Text('Hello, Flutter!');
 
-Stateful Widget
+// After modification
+Text('Welcome to Hot Reload!');
+2. Debug Console
+   What is Debug Console?
 
-A StatefulWidget can change its state during runtime and rebuild its UI dynamically.
+The Debug Console displays logs, errors, and outputs during app execution. It helps track application behavior and debug issues in real time.
 
-Use Cases:
-Counters
-Toggles (Dark/Light mode)
-Animations
-Form inputs
-Example:
-class CounterWidget extends StatefulWidget {
-const CounterWidget({super.key});
+Using Debug Logs
 
-@override
-State<CounterWidget> createState() => _CounterWidgetState();
-}
+Use debugPrint() or print() to log information.
 
-class _CounterWidgetState extends State<CounterWidget> {
-int count = 0;
-
+Example
 void increment() {
 setState(() {
 count++;
+debugPrint('Count updated to $count');
 });
 }
+Common Uses
+Tracking variable values
+Debugging errors
+Monitoring app flow
+Viewing framework logs
+3. Flutter DevTools
+   What is Flutter DevTools?
 
-@override
-Widget build(BuildContext context) {
-return Column(
-children: [
-Text("Count: $count", style: const TextStyle(fontSize: 20)),
-ElevatedButton(
-onPressed: increment,
-child: const Text("Increase"),
-),
-],
-);
-}
-}
+Flutter DevTools is a suite of performance and debugging tools that helps analyze and optimize Flutter applications.
 
-The setState() method triggers a UI rebuild when data changes.
-
-Demo App Structure
-
-File location:
-lib/screens/stateless_stateful_demo.dart
-
-Features:
-Header (Stateless Widget)
-Displays a static title: "Interactive Counter App"
-Counter (Stateful Widget)
-Button click increases the count
-UI updates instantly
-UI Interaction Flow
-Initial State:
-Counter = 0
-Static header is displayed
-After Interaction:
-Button click increases the counter
-UI updates dynamically
-
-
-Testing and Verification
-Stateless widget remains unchanged
-Stateful widget updates on interaction
-UI refresh is efficient and smooth
+How to Launch DevTools
+From VS Code
+Run the app in debug mode
+Open Command Palette
+Select "Open DevTools"
+From Terminal
+flutter pub global activate devtools
+flutter pub global run devtools
+Key Features
+Widget Inspector
+Visualize widget tree
+Inspect UI layout
+Modify widgets interactively
+Performance Tab
+Analyze frame rendering
+Detect performance issues
+Memory Tab
+Monitor memory usage
+Identify memory leaks
+Network Tab
+Track API calls
+Monitor request/response data
+4. Workflow Demonstration
+   Steps Performed
+   Modified a widget in the app
+   Applied Hot Reload to update UI instantly
+   Added debug logs using debugPrint()
+   Viewed logs in Debug Console
+   Opened DevTools to inspect widgets and performance
