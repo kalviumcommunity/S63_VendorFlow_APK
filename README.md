@@ -1,57 +1,103 @@
-Flutter Environment Setup and First App Run
+Exploring Flutter Project Folder Structure
 Project Description
-This project documents the complete setup of the Flutter development environment and the successful execution of a basic Flutter application. It ensures that the system is properly configured for building and testing cross-platform mobile applications.
+This task focuses on understanding the default folder structure of a Flutter project and the role of each directory and file. A well-organized project structure is essential for building scalable, maintainable, and collaborative mobile applications.
 
-Steps Followed
-1. Install Flutter SDK
-   Downloaded Flutter SDK from the official website
+Folder Structure Overview
+Below is the typical structure of a Flutter project:
 
-Extracted it to a preferred directory
+project_root/
+├── lib/
+├── android/
+├── ios/
+├── assets/
+├── test/
+├── pubspec.yaml
+├── README.md
+├── .gitignore
+├── build/
+Key Folder Explanations
+lib/
+Core folder of the Flutter application
 
-Added flutter/bin to system PATH
+Contains all Dart code (UI, logic, services)
 
-Verified installation using:
+Entry point: main.dart
 
-flutter doctor
-2. Set Up Development Environment
-   Android Studio
-   Installed Android Studio
+Suggested structure:
 
-Installed required components:
+lib/
+├── main.dart
+├── screens/
+├── widgets/
+├── services/
+└── models/
+android/
+Contains Android-specific configuration files
 
-Android SDK
+Includes Gradle build scripts and app settings
 
-Android SDK Platform
+Key file: android/app/build.gradle
 
-Android Virtual Device (AVD) Manager
+ios/
+Contains iOS-specific configuration
 
-Installed Flutter and Dart plugins
+Used with Xcode for building iOS apps
 
-(Alternative) VS Code
-Installed Flutter and Dart extensions
+Key file: ios/Runner/Info.plist
 
-3. Configure Emulator
-   Opened AVD Manager in Android Studio
+assets/
+Stores static resources such as:
 
-Created a virtual device (e.g., Pixel 6)
+Images
 
-Selected system image (Android 13+)
+Fonts
 
-Launched emulator
+JSON files
 
-Verified device detection:
+Declared in pubspec.yaml:
 
-flutter devices
-4. Create and Run First Flutter App
-   Created project:
+flutter:
+assets:
+- assets/images/
+test/
+Contains test files
 
-flutter create first_flutter_app
-cd first_flutter_app
-Ran the app:
+Used for unit, widget, and integration testing
 
-flutter run
-Observed:
+Default file: widget_test.dart
 
-Default Flutter counter app displayed on emulator
+pubspec.yaml
+Main configuration file
 
-App successfully builds and runs
+Manages:
+
+Dependencies
+
+Assets
+
+Fonts
+
+Example:
+
+dependencies:
+flutter:
+sdk: flutter
+cupertino_icons: ^1.0.6
+Supporting Files
+.gitignore
+Specifies files Git should ignore
+
+Prevents unnecessary files from being committed
+
+README.md
+Contains project documentation
+
+Includes setup instructions and explanations
+
+build/
+Auto-generated folder with compiled files
+
+Should not be modified manually
+
+.dart_tool/ and .idea/
+Store IDE and Dart-related configurations
