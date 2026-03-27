@@ -1,76 +1,164 @@
-Responsive Flutter UI Layout
+Firebase Integration in Flutter App
 Project Description
-This project demonstrates how to build a responsive user interface in Flutter that adapts to different screen sizes and orientations. The layout dynamically adjusts for mobile and tablet devices using MediaQuery and adaptive widgets.
+This project demonstrates the integration of Firebase Authentication and Cloud Firestore into a Flutter application. It enables user signup/login functionality and real-time data storage with CRUD operations.
 
-The goal is to ensure consistent design, proper spacing, and usability across portrait and landscape modes.
+The goal is to build a scalable backend system that supports authentication and live data updates for future application features.
 
 Features Implemented
-Responsive layout using MediaQuery
+Firebase project setup and configuration
 
-Adaptive UI for phone and tablet screens
+Email & Password Authentication (Signup/Login/Logout)
 
-Portrait and landscape support
+Firestore database integration
 
-Flexible widgets for scalable design
+CRUD operations (Create, Read, Update, Delete)
 
-Clean separation of UI components
+Real-time data display using StreamBuilder
+
+Navigation between authentication screens
 
 Folder Structure
 lib/
 ├── main.dart
 ├── screens/
-│   └── responsive_home.dart   # Responsive UI screen
+│   ├── login_screen.dart
+│   ├── signup_screen.dart
+│   └── home_screen.dart
+├── services/
+│   ├── auth_service.dart
+│   └── firestore_service.dart
 ├── widgets/
 ├── models/
-├── services/
-Key Concepts Used
-1. MediaQuery for Responsiveness
-   double screenWidth = MediaQuery.of(context).size.width;
-   double screenHeight = MediaQuery.of(context).size.height;
+Setup Instructions
+1. Firebase Setup
+   Create a project in Firebase Console
 
-bool isTablet = screenWidth > 600;
-Detects device size
+Add Android/iOS app
 
-Helps switch between layouts
+Download config files:
 
-2. Conditional Layout Rendering
-   return isTablet
-   ? Row(
-   children: [
-   Expanded(child: leftPanel),
-   Expanded(child: rightPanel),
-   ],
-   )
-   : Column(
-   children: [
-   leftPanel,
-   rightPanel,
-   ],
-   );
-   Single-column layout for phones
+google-services.json → android/app/
 
-Two-column layout for tablets
+GoogleService-Info.plist → ios/Runner/
 
-3. Flexible & Adaptive Widgets
-   Used the following widgets to ensure responsiveness:
+2. Install Dependencies
+   Add in pubspec.yaml:
 
-Expanded – distributes space evenly
+dependencies:
+firebase_core: ^3.0.0
+firebase_auth: ^5.0.0
+cloud_firestore: ^5.0.0
+Run:
 
-Flexible – allows flexible sizing
+flutter pub get
+3. Configure Firebase
+   Run:
 
-FittedBox – scales child widgets
+flutterfire configure
+4. Initialize Firebase
+   In main.dart:
 
-AspectRatio – maintains consistent proportions
+import 'package:firebase_core/firebase_core.dart';
 
-Wrap / GridView – responsive item arrangement
+void main() async {
+WidgetsFlutterBinding.ensureInitialized();
+await Firebase.initializeApp();
+runApp(MyApp());
+}
+Authentication Logic
+auth_service.dart
+import 'package:firebase_auth/firebase_auth.dart';
 
-UI Structure
-Header Section
-AppBar or top container for title/navigation
+class AuthService {
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
-Main Content Area
-Dynamic layout (Column or Row based on screen size)
+Future<User?> signUp(String email, String password) async {
+try {
+final credential = await _auth.createUserWithEmailAndPassword(
+email: email,
+password: password,
+);
+return credential.user;
+} catch (e) {
+print(e);
+return null;
+}
+}
 
-Footer Section
-Button or navigation controls
+Future<User?> login(String email, String password) async {
+try {
+final credential = await _auth.signInWithEmailAndPassword(
+email: email,
+password: password,
+);
+return credential.user;
+} catch (e) {
+print(e);
+return null;
+}
+}
 
+Future<void> logout() async {
+await _auth.signOut();
+}
+}
+Firestore Logic
+firestore_service.dart
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class FirestoreService {
+final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+Future<void> addUserData(String uid, Map<String, dynamic> data) async {
+await _db.collection('users').doc(uid).set(data);
+}
+
+Stream<QuerySnapshot> getData() {
+return _db.collection('users').snapshots();
+}
+
+Future<void> updateData(String uid, Map<String, dynamic> data) async {
+await _db.collection('users').doc(uid).update(data);
+}
+
+Future<void> deleteData(String uid) async {
+await _db.collection('users').doc(uid).delete();
+}
+}
+UI Screens
+Signup Screen
+Email and password input
+
+Calls signUp()
+
+Navigates to home screen on success
+
+Login Screen
+Email and password input
+
+Calls login()
+
+Redirects to dashboard
+
+Home Screen
+Displays Firestore data
+
+Allows add, update, delete operations
+
+Real-Time Data Display
+StreamBuilder(
+stream: FirestoreService().getData(),
+builder: (context, snapshot) {
+if (!snapshot.hasData) return CircularProgressIndicator();
+
+    var docs = snapshot.data!.docs;
+
+    return ListView(
+      children: docs.map((doc) {
+        return ListTile(
+          title: Text(doc['name']),
+        );
+      }).toList(),
+    );
+},
+);
