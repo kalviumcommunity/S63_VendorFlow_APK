@@ -1,164 +1,57 @@
-Firebase Integration in Flutter App
+Flutter Environment Setup and First App Run
 Project Description
-This project demonstrates the integration of Firebase Authentication and Cloud Firestore into a Flutter application. It enables user signup/login functionality and real-time data storage with CRUD operations.
+This project documents the complete setup of the Flutter development environment and the successful execution of a basic Flutter application. It ensures that the system is properly configured for building and testing cross-platform mobile applications.
 
-The goal is to build a scalable backend system that supports authentication and live data updates for future application features.
+Steps Followed
+1. Install Flutter SDK
+   Downloaded Flutter SDK from the official website
 
-Features Implemented
-Firebase project setup and configuration
+Extracted it to a preferred directory
 
-Email & Password Authentication (Signup/Login/Logout)
+Added flutter/bin to system PATH
 
-Firestore database integration
+Verified installation using:
 
-CRUD operations (Create, Read, Update, Delete)
+flutter doctor
+2. Set Up Development Environment
+   Android Studio
+   Installed Android Studio
 
-Real-time data display using StreamBuilder
+Installed required components:
 
-Navigation between authentication screens
+Android SDK
 
-Folder Structure
-lib/
-├── main.dart
-├── screens/
-│   ├── login_screen.dart
-│   ├── signup_screen.dart
-│   └── home_screen.dart
-├── services/
-│   ├── auth_service.dart
-│   └── firestore_service.dart
-├── widgets/
-├── models/
-Setup Instructions
-1. Firebase Setup
-   Create a project in Firebase Console
+Android SDK Platform
 
-Add Android/iOS app
+Android Virtual Device (AVD) Manager
 
-Download config files:
+Installed Flutter and Dart plugins
 
-google-services.json → android/app/
+(Alternative) VS Code
+Installed Flutter and Dart extensions
 
-GoogleService-Info.plist → ios/Runner/
+3. Configure Emulator
+   Opened AVD Manager in Android Studio
 
-2. Install Dependencies
-   Add in pubspec.yaml:
+Created a virtual device (e.g., Pixel 6)
 
-dependencies:
-firebase_core: ^3.0.0
-firebase_auth: ^5.0.0
-cloud_firestore: ^5.0.0
-Run:
+Selected system image (Android 13+)
 
-flutter pub get
-3. Configure Firebase
-   Run:
+Launched emulator
 
-flutterfire configure
-4. Initialize Firebase
-   In main.dart:
+Verified device detection:
 
-import 'package:firebase_core/firebase_core.dart';
+flutter devices
+4. Create and Run First Flutter App
+   Created project:
 
-void main() async {
-WidgetsFlutterBinding.ensureInitialized();
-await Firebase.initializeApp();
-runApp(MyApp());
-}
-Authentication Logic
-auth_service.dart
-import 'package:firebase_auth/firebase_auth.dart';
+flutter create first_flutter_app
+cd first_flutter_app
+Ran the app:
 
-class AuthService {
-final FirebaseAuth _auth = FirebaseAuth.instance;
+flutter run
+Observed:
 
-Future<User?> signUp(String email, String password) async {
-try {
-final credential = await _auth.createUserWithEmailAndPassword(
-email: email,
-password: password,
-);
-return credential.user;
-} catch (e) {
-print(e);
-return null;
-}
-}
+Default Flutter counter app displayed on emulator
 
-Future<User?> login(String email, String password) async {
-try {
-final credential = await _auth.signInWithEmailAndPassword(
-email: email,
-password: password,
-);
-return credential.user;
-} catch (e) {
-print(e);
-return null;
-}
-}
-
-Future<void> logout() async {
-await _auth.signOut();
-}
-}
-Firestore Logic
-firestore_service.dart
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-class FirestoreService {
-final FirebaseFirestore _db = FirebaseFirestore.instance;
-
-Future<void> addUserData(String uid, Map<String, dynamic> data) async {
-await _db.collection('users').doc(uid).set(data);
-}
-
-Stream<QuerySnapshot> getData() {
-return _db.collection('users').snapshots();
-}
-
-Future<void> updateData(String uid, Map<String, dynamic> data) async {
-await _db.collection('users').doc(uid).update(data);
-}
-
-Future<void> deleteData(String uid) async {
-await _db.collection('users').doc(uid).delete();
-}
-}
-UI Screens
-Signup Screen
-Email and password input
-
-Calls signUp()
-
-Navigates to home screen on success
-
-Login Screen
-Email and password input
-
-Calls login()
-
-Redirects to dashboard
-
-Home Screen
-Displays Firestore data
-
-Allows add, update, delete operations
-
-Real-Time Data Display
-StreamBuilder(
-stream: FirestoreService().getData(),
-builder: (context, snapshot) {
-if (!snapshot.hasData) return CircularProgressIndicator();
-
-    var docs = snapshot.data!.docs;
-
-    return ListView(
-      children: docs.map((doc) {
-        return ListTile(
-          title: Text(doc['name']),
-        );
-      }).toList(),
-    );
-},
-);
+App successfully builds and runs
