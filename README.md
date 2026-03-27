@@ -1,92 +1,76 @@
-Smart Street Vendor App (Flutter)
+Responsive Flutter UI Layout
 Project Description
-This project is the initial setup for a Flutter-based mobile application aimed at improving street-food ordering systems. The goal is to build a scalable app that will later support features like digital menus, order management, and real-time updates using Firebase.
+This project demonstrates how to build a responsive user interface in Flutter that adapts to different screen sizes and orientations. The layout dynamically adjusts for mobile and tablet devices using MediaQuery and adaptive widgets.
 
-This phase focuses on setting up the Flutter environment, understanding project structure, and building a basic interactive UI.
+The goal is to ensure consistent design, proper spacing, and usability across portrait and landscape modes.
+
+Features Implemented
+Responsive layout using MediaQuery
+
+Adaptive UI for phone and tablet screens
+
+Portrait and landscape support
+
+Flexible widgets for scalable design
+
+Clean separation of UI components
 
 Folder Structure
 lib/
-├── main.dart        # Entry point of the application
-├── screens/         # Contains different UI screens (e.g., WelcomeScreen)
-├── widgets/         # Reusable UI components (buttons, cards, etc.)
-├── models/          # Data models (used later for structured data)
-├── services/        # Backend logic (Firebase/API integration in future)
-Explanation
-main.dart
-The starting point of the app. It initializes the app and defines the root widget.
+├── main.dart
+├── screens/
+│   └── responsive_home.dart   # Responsive UI screen
+├── widgets/
+├── models/
+├── services/
+Key Concepts Used
+1. MediaQuery for Responsiveness
+   double screenWidth = MediaQuery.of(context).size.width;
+   double screenHeight = MediaQuery.of(context).size.height;
 
-screens/
-Contains full UI pages. Each screen represents a separate view in the app (e.g., Home, Menu, Orders).
+bool isTablet = screenWidth > 600;
+Detects device size
 
-widgets/
-Stores reusable components to avoid code duplication and improve maintainability.
+Helps switch between layouts
 
-models/
-Defines data structures for the app, such as order, user, or menu item (used in later stages).
+2. Conditional Layout Rendering
+   return isTablet
+   ? Row(
+   children: [
+   Expanded(child: leftPanel),
+   Expanded(child: rightPanel),
+   ],
+   )
+   : Column(
+   children: [
+   leftPanel,
+   rightPanel,
+   ],
+   );
+   Single-column layout for phones
 
-services/
-Handles backend logic like Firebase authentication, database access, and APIs.
+Two-column layout for tablets
 
-Naming Conventions
-File names: lowercase with underscores
-Example: welcome_screen.dart
+3. Flexible & Adaptive Widgets
+   Used the following widgets to ensure responsiveness:
 
-Class names: PascalCase
-Example: WelcomeScreen
+Expanded – distributes space evenly
 
-Variables and functions: camelCase
-Example: toggleText()
+Flexible – allows flexible sizing
 
-Widgets: Named based on purpose
-Example: CustomButton, MenuCard
+FittedBox – scales child widgets
 
-Setup Instructions
-1. Install Flutter
-   Download and install Flutter SDK from the official website
+AspectRatio – maintains consistent proportions
 
-Add Flutter to system PATH
+Wrap / GridView – responsive item arrangement
 
-2. Install IDE
-   Install Android Studio or VS Code
+UI Structure
+Header Section
+AppBar or top container for title/navigation
 
-Add Flutter and Dart extensions
+Main Content Area
+Dynamic layout (Column or Row based on screen size)
 
-3. Verify Installation
-   Run the following command:
+Footer Section
+Button or navigation controls
 
-flutter doctor
-Fix any issues shown in the output.
-
-4. Create Project
-   flutter create your_project_name
-   cd your_project_name
-5. Run the App
-   flutter run
-   Make sure:
-
-Emulator or physical device is connected
-
-Default Flutter Demo App runs successfully
-
-UI Implementation
-The default counter app is replaced with a custom Welcome Screen that includes:
-
-Scaffold with AppBar
-
-Column layout
-
-Text widget (title)
-
-Image/Icon
-
-Button (ElevatedButton)
-
-State change on button click (toggle text/color)
-
-This demonstrates:
-
-Widget composition
-
-State management using StatefulWidget
-
-Basic Dart syntax
