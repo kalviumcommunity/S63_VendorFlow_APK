@@ -1,103 +1,84 @@
-Exploring Flutter Project Folder Structure
+Understanding Widget Tree and Reactive UI in Flutter
 Project Description
-This task focuses on understanding the default folder structure of a Flutter project and the role of each directory and file. A well-organized project structure is essential for building scalable, maintainable, and collaborative mobile applications.
+This project demonstrates the core concepts of Flutter’s widget tree and reactive UI model. A simple interactive app is built to show how widgets are structured hierarchically and how the UI updates automatically when the state changes.
 
-Folder Structure Overview
-Below is the typical structure of a Flutter project:
+What is a Widget Tree?
+In Flutter, everything is a widget. The UI is built as a tree of widgets, where each widget is a node in the hierarchy.
 
-project_root/
-├── lib/
-├── android/
-├── ios/
-├── assets/
-├── test/
-├── pubspec.yaml
-├── README.md
-├── .gitignore
-├── build/
-Key Folder Explanations
-lib/
-Core folder of the Flutter application
+The root is usually MaterialApp
 
-Contains all Dart code (UI, logic, services)
+It contains child widgets like Scaffold
 
-Entry point: main.dart
+These further contain layout and UI elements such as Column, Text, and Button
 
-Suggested structure:
+Example Widget Tree Structure
+MaterialApp
+└── Scaffold
+├── AppBar
+│     └── Text
+└── Body
+└── Center
+└── Column
+├── Text
+├── Image/Icon
+└── ElevatedButton
+This structure shows the parent-child relationship between widgets.
 
-lib/
-├── main.dart
-├── screens/
-├── widgets/
-├── services/
-└── models/
-android/
-Contains Android-specific configuration files
+Reactive UI in Flutter
+Flutter follows a reactive programming model, meaning:
 
-Includes Gradle build scripts and app settings
+The UI automatically updates when the data (state) changes
 
-Key file: android/app/build.gradle
+You do not manually redraw the UI
 
-ios/
-Contains iOS-specific configuration
+Instead, Flutter rebuilds only the affected widgets
 
-Used with Xcode for building iOS apps
+Example Using setState()
+int count = 0;
 
-Key file: ios/Runner/Info.plist
+void increment() {
+setState(() {
+count++;
+});
+}
+When setState() is called:
 
-assets/
-Stores static resources such as:
+The state changes
 
-Images
+Flutter rebuilds only the necessary part of the widget tree
 
-Fonts
+UI updates instantly
 
-JSON files
+Demo App Overview
+A simple app was created with:
 
-Declared in pubspec.yaml:
+A title text
 
-flutter:
-assets:
-- assets/images/
-test/
-Contains test files
+A button
 
-Used for unit, widget, and integration testing
+A dynamic value (counter or text)
 
-Default file: widget_test.dart
+Features
+Displays initial UI state
 
-pubspec.yaml
-Main configuration file
+Button interaction updates UI
 
-Manages:
+Demonstrates real-time state change
 
-Dependencies
+Widget Tree for Demo App
+Scaffold
+├── AppBar
+│     └── Text (App Title)
+└── Body
+└── Center
+└── Column
+├── Text (Dynamic Content)
+└── ElevatedButton (onPressed)
+State Change Demonstration
+Initial State:
+Text shows default value (e.g., "Count: 0")
 
-Assets
+After Button Click:
+Text updates (e.g., "Count: 1")
 
-Fonts
-
-Example:
-
-dependencies:
-flutter:
-sdk: flutter
-cupertino_icons: ^1.0.6
-Supporting Files
-.gitignore
-Specifies files Git should ignore
-
-Prevents unnecessary files from being committed
-
-README.md
-Contains project documentation
-
-Includes setup instructions and explanations
-
-build/
-Auto-generated folder with compiled files
-
-Should not be modified manually
-
-.dart_tool/ and .idea/
-Store IDE and Dart-related configurations
+This shows how Flutter reacts to state changes.
