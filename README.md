@@ -1,125 +1,92 @@
 
 
-# 🧩 Reusable Widgets in Flutter
+# 📱 Responsive Design in Flutter (MediaQuery & LayoutBuilder)
 
 ## 📌 Project Overview
 
-This project demonstrates how to create **custom reusable widgets** in Flutter to improve code modularity, reduce duplication, and maintain consistent UI design.
+This project demonstrates how to build **adaptive and responsive layouts** in Flutter using:
 
-A custom `InfoCard` widget is created and reused across multiple screens, along with an optional interactive `LikeButton`.
+* `MediaQuery` → for dynamic sizing
+* `LayoutBuilder` → for conditional layout changes
 
----
-
-## 🏗️ Custom Widget Implementation
-
-### 🔹 InfoCard (Stateless Widget)
-
-```dart
-class InfoCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-
-  const InfoCard({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(12),
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(title),
-        subtitle: Text(subtitle),
-      ),
-    );
-  }
-}
-```
+The app adjusts automatically across different screen sizes (mobile & tablet), ensuring a smooth and consistent user experience.
 
 ---
 
-## 🔹 Usage in Screens
+## 🏗️ Implementation
 
-```dart
-InfoCard(
-  title: 'Profile',
-  subtitle: 'View details',
-  icon: Icons.person,
+### 🔹 Using MediaQuery (Dynamic Sizing)
+
+```dart id="r1"
+var screenWidth = MediaQuery.of(context).size.width;
+
+Container(
+  width: screenWidth * 0.8,
+  height: 100,
+  color: Colors.teal,
+  child: Center(child: Text('Responsive Box')),
 )
 ```
 
-👉 Reused in multiple screens like Home and Details
+👉 Adapts size based on screen width
 
 ---
 
-## 🔹 Optional Stateful Widget (Like Button)
+### 🔹 Using LayoutBuilder (Adaptive Layout)
 
-```dart
-class LikeButton extends StatefulWidget {
-  @override
-  _LikeButtonState createState() => _LikeButtonState();
-}
-
-class _LikeButtonState extends State<LikeButton> {
-  bool _isLiked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        _isLiked ? Icons.favorite : Icons.favorite_border,
-      ),
-      onPressed: () {
-        setState(() {
-          _isLiked = !_isLiked;
-        });
-      },
-    );
-  }
-}
+```dart id="r2"
+LayoutBuilder(
+  builder: (context, constraints) {
+    if (constraints.maxWidth < 600) {
+      return Column(
+        children: [Text('Mobile Layout')],
+      );
+    } else {
+      return Row(
+        children: [Text('Tablet Layout')],
+      );
+    }
+  },
+)
 ```
+
+👉 Switches layout based on screen size
 
 ---
 
 ## 📸 Screenshots (Add)
 
-* Widget used in Home Screen
-* Widget used in Details Screen
-* Consistent UI across screens
+* Mobile view (Column layout)
+* Tablet view (Row layout)
 
 ---
 
 ## 🧠 Reflection
 
-### 🔹 How do reusable widgets help?
+### 🔹 How do these tools help?
 
-* Reduce code duplication
-* Improve readability
-* Ensure consistent design
+* `MediaQuery` → adjusts size proportionally
+* `LayoutBuilder` → changes layout structure
 
 ---
 
-### 🔹 Why is modularity important?
+### 🔹 Why is responsive design important?
 
-* Makes code scalable
-* Easier for teams to collaborate
-* Simplifies maintenance
+* Supports multiple devices 📱💻
+* Prevents UI breaking
+* Improves user experience
 
 ---
 
 ### 🔹 Challenges faced
 
-* Structuring widget properties
-* Passing dynamic data correctly
+* Handling layout shifts between screen sizes
+* Avoiding overflow issues
 
 ---
 
 ## 🚀 Final Takeaway
 
-> Reusable widgets make Flutter apps cleaner, scalable, and easier to maintain by following a modular design approach.
+> Using MediaQuery and LayoutBuilder allows Flutter apps to scale and adapt seamlessly across different devices, creating flexible and professional UI designs.
 
 ---
