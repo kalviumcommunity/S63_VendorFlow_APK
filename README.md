@@ -1,113 +1,103 @@
-Here’s a **small, clean, copy-paste ready README** for your persistent login task 👇
+Here’s a **clean, small, ready-to-copy README** for your Firestore schema task 👇
 
 ---
 
-# 🔐 Persistent Login in Flutter (Firebase Auth)
+## 📊 Firestore Database Schema Design
 
-## 📌 Project Overview
+### 📌 Overview
 
-This project demonstrates how to implement **persistent user sessions** in Flutter using Firebase Authentication.
-
-The app automatically:
-
-* Keeps users logged in after app restart 🔄
-* Detects auth state in real-time
-* Navigates between AuthScreen and HomeScreen seamlessly
+This project defines a scalable and well-structured **Cloud Firestore database schema** for a Flutter application. The goal is to organize data efficiently using collections, documents, and subcollections to support real-time updates and future scalability.
 
 ---
 
-## 🏗️ Core Implementation
+### 🧠 Data Requirements
 
-### 🔹 Detect Auth State
+The app manages the following entities:
 
-```dart id="pl1"
-home: StreamBuilder<User?>(
-  stream: FirebaseAuth.instance.authStateChanges(),
-  builder: (ctx, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return Center(child: CircularProgressIndicator());
-    }
-    if (snapshot.hasData) {
-      return HomeScreen();
-    }
-    return AuthScreen();
-  },
-)
+* Users
+* Tasks
+* Activity Logs
+
+---
+
+### 🗂️ Firestore Schema Structure
+
+```
+users
+ └── userId
+       ├── name: string
+       ├── email: string
+       ├── createdAt: timestamp
+       └── tasks (subcollection)
+             └── taskId
+                   ├── title: string
+                   ├── description: string
+                   ├── isCompleted: boolean
+                   ├── createdAt: timestamp
+
+logs
+ └── logId
+       ├── userId: string
+       ├── action: string
+       ├── timestamp: timestamp
 ```
 
-👉 Automatically routes user based on login state
-
 ---
 
-## 🔄 Auto-Login Flow
+### 📄 Sample Documents
 
-* User logs in ✅
-* App is closed 🔴
-* App is reopened 🔁
-* User remains logged in → redirected to HomeScreen
+**User Document**
 
----
-
-## 🚪 Logout Implementation
-
-```dart id="pl2"
-FirebaseAuth.instance.signOut();
-```
-
-👉 After logout:
-
-* User is redirected to AuthScreen
-* Session is cleared
-* Auto-login stops
-
----
-
-## ⏳ Optional Loading State
-
-```dart id="pl3"
-if (snapshot.connectionState == ConnectionState.waiting) {
-  return Center(child: CircularProgressIndicator());
+```json
+{
+  "name": "Rahul",
+  "email": "rahul@example.com",
+  "createdAt": "2026-04-16T10:00:00Z"
 }
 ```
 
-👉 Prevents UI flicker during session check
+**Task Document**
+
+```json
+{
+  "title": "Complete Assignment",
+  "description": "Finish Flutter project",
+  "isCompleted": false,
+  "createdAt": "2026-04-16T11:00:00Z"
+}
+```
+
+**Log Document**
+
+```json
+{
+  "userId": "user123",
+  "action": "Created Task",
+  "timestamp": "2026-04-16T11:05:00Z"
+}
+```
 
 ---
 
-## 📸 Screenshots (Add)
+### 🧩 Design Decisions
 
-* HomeScreen before restart
-* Auto-login after restart
-* Logout → AuthScreen
-
----
-
-## 🧠 Reflection
-
-### 🔹 How does persistence work?
-
-* Firebase stores secure tokens locally
-* Automatically restores session on app restart
+* Used **subcollections (`tasks`)** to handle large, user-specific data efficiently
+* Kept documents **flat and simple** to reduce read costs
+* Added timestamps for tracking and sorting
+* Separated logs into a different collection for better scalability
 
 ---
 
-### 🔹 Why is it important?
+### 📈 Scalability Considerations
 
-* Improves user experience
-* Eliminates repeated logins
-* Makes app feel professional
-
----
-
-### 🔹 Challenges faced
-
-* Handling loading state properly
-* Avoiding incorrect screen flashes
+* Supports thousands of users with isolated data
+* Avoids large arrays by using subcollections
+* Optimized for minimal reads and efficient queries
 
 ---
 
-## 🚀 Final Takeaway
+### 🪞 Reflection
 
-> Firebase Authentication provides built-in session persistence, enabling seamless auto-login and real-time authentication state handling in Flutter apps.
+Designing the schema helped in understanding how to structure NoSQL data efficiently. The main challenge was deciding when to use subcollections vs top-level collections. This structure ensures clarity, scalability, and easy maintenance for future development.
 
 ---
