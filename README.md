@@ -1,88 +1,125 @@
 
 
-# ⚡ State Management in Flutter using setState()
+# 🧩 Reusable Widgets in Flutter
 
 ## 📌 Project Overview
 
-This project demonstrates **local UI state management** in Flutter using `StatefulWidget` and the `setState()` method.
+This project demonstrates how to create **custom reusable widgets** in Flutter to improve code modularity, reduce duplication, and maintain consistent UI design.
 
-A simple counter app is implemented where the UI updates instantly when the user interacts with buttons (increment/decrement), showcasing Flutter’s **reactive rendering model**.
-
----
-
-## 🧠 Key Concepts
-
-* **StatelessWidget** → Static UI (no changes after build)
-* **StatefulWidget** → Dynamic UI (updates based on user interaction)
-* **setState()** → Triggers UI rebuild when state changes
+A custom `InfoCard` widget is created and reused across multiple screens, along with an optional interactive `LikeButton`.
 
 ---
 
-## 🏗️ Implementation
+## 🏗️ Custom Widget Implementation
 
-### 🔹 Counter Update using setState()
+### 🔹 InfoCard (Stateless Widget)
 
 ```dart
-int _counter = 0;
+class InfoCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
 
-void _incrementCounter() {
-  setState(() {
-    _counter++;
+  const InfoCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(12),
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: Text(subtitle),
+      ),
+    );
+  }
 }
 ```
 
-👉 Updates UI instantly when button is pressed
-
 ---
 
-### 🔹 Conditional UI Change
+## 🔹 Usage in Screens
 
 ```dart
-Container(
-  color: _counter >= 5 ? Colors.greenAccent : Colors.white,
-  child: Text('Count: $_counter'),
+InfoCard(
+  title: 'Profile',
+  subtitle: 'View details',
+  icon: Icons.person,
 )
 ```
 
-👉 UI reacts dynamically based on state
+👉 Reused in multiple screens like Home and Details
+
+---
+
+## 🔹 Optional Stateful Widget (Like Button)
+
+```dart
+class LikeButton extends StatefulWidget {
+  @override
+  _LikeButtonState createState() => _LikeButtonState();
+}
+
+class _LikeButtonState extends State<LikeButton> {
+  bool _isLiked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        _isLiked ? Icons.favorite : Icons.favorite_border,
+      ),
+      onPressed: () {
+        setState(() {
+          _isLiked = !_isLiked;
+        });
+      },
+    );
+  }
+}
+```
 
 ---
 
 ## 📸 Screenshots (Add)
 
-* Initial state (counter = 0)
-* After increment
-* UI color change (when counter ≥ 5)
+* Widget used in Home Screen
+* Widget used in Details Screen
+* Consistent UI across screens
 
 ---
 
 ## 🧠 Reflection
 
-### 🔹 Stateless vs Stateful
+### 🔹 How do reusable widgets help?
 
-* Stateless → Fixed UI
-* Stateful → Interactive UI with changing data
-
----
-
-### 🔹 Why setState() is important?
-
-* Notifies Flutter about data changes
-* Triggers efficient UI updates
-* Enables real-time interactivity
+* Reduce code duplication
+* Improve readability
+* Ensure consistent design
 
 ---
 
-### 🔹 Impact of improper use
+### 🔹 Why is modularity important?
 
-* Missing `setState()` → UI won’t update
-* Overuse → unnecessary rebuilds, performance issues
+* Makes code scalable
+* Easier for teams to collaborate
+* Simplifies maintenance
+
+---
+
+### 🔹 Challenges faced
+
+* Structuring widget properties
+* Passing dynamic data correctly
 
 ---
 
 ## 🚀 Final Takeaway
 
-> `setState()` enables Flutter apps to react instantly to user input by updating only the necessary parts of the UI, making applications interactive and efficient.
+> Reusable widgets make Flutter apps cleaner, scalable, and easier to maintain by following a modular design approach.
 
 ---
