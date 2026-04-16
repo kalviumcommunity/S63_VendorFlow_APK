@@ -1,42 +1,32 @@
-Here’s a **small, clean, copy-paste ready README** for your complete Firebase Auth flow 👇
+Here’s a **small, clean, copy-paste ready README** for your persistent login task 👇
 
 ---
 
-# 🔐 Flutter Firebase Authentication (Full Flow)
+# 🔐 Persistent Login in Flutter (Firebase Auth)
 
 ## 📌 Project Overview
 
-This project implements a **complete authentication system** in Flutter using Firebase Authentication.
+This project demonstrates how to implement **persistent user sessions** in Flutter using Firebase Authentication.
 
-Features include:
+The app automatically:
 
-* User Signup 📝
-* User Login 🔑
-* Logout 🚪
-* Automatic navigation using `authStateChanges()`
-
-The app dynamically switches between **AuthScreen** and **HomeScreen** based on user authentication state.
+* Keeps users logged in after app restart 🔄
+* Detects auth state in real-time
+* Navigates between AuthScreen and HomeScreen seamlessly
 
 ---
 
-## 🏗️ Setup
+## 🏗️ Core Implementation
 
-```yaml
-dependencies:
-  firebase_core: ^3.0.0
-  firebase_auth: ^5.0.0
-```
+### 🔹 Detect Auth State
 
----
-
-## 🔄 Authentication Flow
-
-### 🔹 Auto Navigation (Core Logic)
-
-```dart
+```dart id="pl1"
 home: StreamBuilder<User?>(
   stream: FirebaseAuth.instance.authStateChanges(),
   builder: (ctx, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(child: CircularProgressIndicator());
+    }
     if (snapshot.hasData) {
       return HomeScreen();
     }
@@ -45,91 +35,79 @@ home: StreamBuilder<User?>(
 )
 ```
 
-👉 Automatically updates UI based on login state
+👉 Automatically routes user based on login state
 
 ---
 
-## 🔑 Authentication Methods
+## 🔄 Auto-Login Flow
 
-### 🔹 Signup
-
-```dart
-await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  email: email,
-  password: password,
-);
-```
+* User logs in ✅
+* App is closed 🔴
+* App is reopened 🔁
+* User remains logged in → redirected to HomeScreen
 
 ---
 
-### 🔹 Login
+## 🚪 Logout Implementation
 
-```dart
-await FirebaseAuth.instance.signInWithEmailAndPassword(
-  email: email,
-  password: password,
-);
-```
-
----
-
-### 🔹 Logout
-
-```dart
+```dart id="pl2"
 FirebaseAuth.instance.signOut();
 ```
 
+👉 After logout:
+
+* User is redirected to AuthScreen
+* Session is cleared
+* Auto-login stops
+
 ---
 
-## 🖥️ UI Screens
+## ⏳ Optional Loading State
 
-### 🔹 AuthScreen
+```dart id="pl3"
+if (snapshot.connectionState == ConnectionState.waiting) {
+  return Center(child: CircularProgressIndicator());
+}
+```
 
-* Email & Password input
-* Toggle between Login / Signup
-* Error handling with SnackBar
-
-### 🔹 HomeScreen
-
-* Displays user email
-* Logout button
+👉 Prevents UI flicker during session check
 
 ---
 
 ## 📸 Screenshots (Add)
 
-* AuthScreen (Login/Signup)
-* HomeScreen (User logged in)
-* Firebase Console (Users list)
+* HomeScreen before restart
+* Auto-login after restart
+* Logout → AuthScreen
 
 ---
 
 ## 🧠 Reflection
 
-### 🔹 Seamless Navigation
+### 🔹 How does persistence work?
 
-* `authStateChanges()` removes manual navigation
-* UI updates instantly when auth state changes
+* Firebase stores secure tokens locally
+* Automatically restores session on app restart
 
 ---
 
-### 🔹 Importance of Logout
+### 🔹 Why is it important?
 
-* Clears user session
-* Allows switching accounts
-* Ensures security
+* Improves user experience
+* Eliminates repeated logins
+* Makes app feel professional
 
 ---
 
 ### 🔹 Challenges faced
 
-* Handling Firebase errors
-* Managing UI state between login/signup
+* Handling loading state properly
+* Avoiding incorrect screen flashes
 
 ---
 
 ## 🚀 Final Takeaway
 
-> Using Firebase Auth with `authStateChanges()` enables a seamless, real-time authentication flow, making Flutter apps feel smooth and production-ready.
+> Firebase Authentication provides built-in session persistence, enabling seamless auto-login and real-time authentication state handling in Flutter apps.
 
 ---
