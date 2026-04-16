@@ -1,103 +1,96 @@
-Here’s a **clean, small, ready-to-copy README** for your Firestore schema task 👇
+Here’s a **clean, small, ready-to-copy README** for your Firestore data fetching task 👇
 
 ---
 
-## 📊 Firestore Database Schema Design
+## 🔥 Firestore Data Fetching & Display (Flutter)
 
 ### 📌 Overview
 
-This project defines a scalable and well-structured **Cloud Firestore database schema** for a Flutter application. The goal is to organize data efficiently using collections, documents, and subcollections to support real-time updates and future scalability.
+This project demonstrates how to **fetch and display real-time data from Cloud Firestore** in a Flutter app. Using `StreamBuilder`, the UI updates automatically whenever data changes in the database, creating a dynamic and responsive experience.
 
 ---
 
-### 🧠 Data Requirements
+### ⚙️ Setup
 
-The app manages the following entities:
+Added Firestore dependency:
 
-* Users
-* Tasks
-* Activity Logs
+```yaml
+dependencies:
+  cloud_firestore: ^5.0.0
+```
+
+Initialized Firebase in `main.dart` before running the app.
 
 ---
 
-### 🗂️ Firestore Schema Structure
+### 📡 Fetching Real-Time Data
 
-```
-users
- └── userId
-       ├── name: string
-       ├── email: string
-       ├── createdAt: timestamp
-       └── tasks (subcollection)
-             └── taskId
-                   ├── title: string
-                   ├── description: string
-                   ├── isCompleted: boolean
-                   ├── createdAt: timestamp
+Used Firestore’s `.snapshots()` to listen for live updates:
 
-logs
- └── logId
-       ├── userId: string
-       ├── action: string
-       ├── timestamp: timestamp
-```
+```dart
+StreamBuilder(
+  stream: FirebaseFirestore.instance.collection('tasks').snapshots(),
+  builder: (context, snapshot) {
+    if (!snapshot.hasData) {
+      return Center(child: CircularProgressIndicator());
+    }
 
----
+    final tasks = snapshot.data!.docs;
 
-### 📄 Sample Documents
+    return ListView.builder(
+      itemCount: tasks.length,
+      itemBuilder: (context, index) {
+        final task = tasks[index];
 
-**User Document**
-
-```json
-{
-  "name": "Rahul",
-  "email": "rahul@example.com",
-  "createdAt": "2026-04-16T10:00:00Z"
-}
-```
-
-**Task Document**
-
-```json
-{
-  "title": "Complete Assignment",
-  "description": "Finish Flutter project",
-  "isCompleted": false,
-  "createdAt": "2026-04-16T11:00:00Z"
-}
-```
-
-**Log Document**
-
-```json
-{
-  "userId": "user123",
-  "action": "Created Task",
-  "timestamp": "2026-04-16T11:05:00Z"
-}
+        return ListTile(
+          title: Text(task['title'] ?? 'Untitled'),
+          subtitle: Text(task['description'] ?? 'No description'),
+        );
+      },
+    );
+  },
+);
 ```
 
 ---
 
-### 🧩 Design Decisions
+### 📄 Fetching Single Document
 
-* Used **subcollections (`tasks`)** to handle large, user-specific data efficiently
-* Kept documents **flat and simple** to reduce read costs
-* Added timestamps for tracking and sorting
-* Separated logs into a different collection for better scalability
+```dart
+FutureBuilder(
+  future: FirebaseFirestore.instance.collection('users').doc('userId').get(),
+  builder: (context, snapshot) {
+    if (!snapshot.hasData) {
+      return CircularProgressIndicator();
+    }
+
+    final data = snapshot.data!.data();
+    return Text(data?['name'] ?? 'No Name');
+  },
+);
+```
 
 ---
 
-### 📈 Scalability Considerations
+### 🎯 Features Implemented
 
-* Supports thousands of users with isolated data
-* Avoids large arrays by using subcollections
-* Optimized for minimal reads and efficient queries
+* Real-time data updates using `StreamBuilder`
+* Dynamic UI rendering with `ListView`
+* Safe data handling with null checks
+* Single document fetching using `FutureBuilder`
+
+---
+
+### 🧪 Testing
+
+* Added/edited/deleted documents in Firebase Console
+* Changes reflected instantly in the app UI
+* Verified no crashes on missing or null fields
 
 ---
 
 ### 🪞 Reflection
 
-Designing the schema helped in understanding how to structure NoSQL data efficiently. The main challenge was deciding when to use subcollections vs top-level collections. This structure ensures clarity, scalability, and easy maintenance for future development.
+Firestore’s real-time capabilities make apps feel live and interactive without manual refresh. The main challenge was handling null or missing data safely. Using `StreamBuilder` simplifies syncing UI with backend changes, making development faster and more scalable.
 
 ---
