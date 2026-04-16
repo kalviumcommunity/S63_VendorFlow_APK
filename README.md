@@ -1,54 +1,37 @@
-Here’s a **small, clean, copy-paste ready README** for your FlutterFire CLI task 👇
+Here’s a **small, clean, copy-paste ready README** for your Firebase Authentication task 👇
 
 ---
 
-# 🔥 Firebase Integration using FlutterFire CLI
+# 🔐 Firebase Authentication in Flutter (Email & Password)
 
 ## 📌 Project Overview
 
-This project demonstrates how to **integrate Firebase into a Flutter app using FlutterFire CLI**, automating setup across platforms (Android, iOS, Web).
+This project demonstrates how to implement **user authentication in Flutter using Firebase Auth**.
 
-The CLI simplifies configuration by generating the required files and linking the app to Firebase without manual setup.
+The app supports:
+
+* User Signup (Create Account)
+* User Login
+* Session handling with Firebase
+* Real-time user updates in Firebase Console
 
 ---
 
 ## 🏗️ Setup Implementation
 
-### 🔹 Install Tools
+### 🔹 Add Dependencies
 
-```bash id="ff1"
-npm install -g firebase-tools
-dart pub global activate flutterfire_cli
-```
-
----
-
-### 🔹 Configure Firebase
-
-```bash id="ff2"
-firebase login
-flutterfire configure
-```
-
-👉 Generates `firebase_options.dart` automatically
-
----
-
-### 🔹 Add Dependency
-
-```yaml id="ff3"
+```yaml id="fa1"
 dependencies:
   firebase_core: ^3.0.0
+  firebase_auth: ^5.0.0
 ```
 
 ---
 
 ### 🔹 Initialize Firebase
 
-```dart id="ff4"
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
+```dart id="fa2"
 await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
 );
@@ -56,48 +39,113 @@ await Firebase.initializeApp(
 
 ---
 
+## 🧩 Authentication UI
+
+```dart id="fa3"
+TextField(
+  controller: _email,
+  decoration: InputDecoration(labelText: 'Email'),
+),
+
+TextField(
+  controller: _password,
+  decoration: InputDecoration(labelText: 'Password'),
+  obscureText: true,
+),
+
+ElevatedButton(
+  onPressed: _handleAuth,
+  child: Text(isLogin ? 'Login' : 'Signup'),
+)
+```
+
+---
+
+## ⚡ Authentication Logic
+
+### 🔹 Signup
+
+```dart id="fa4"
+await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  email: email,
+  password: password,
+);
+```
+
+---
+
+### 🔹 Login
+
+```dart id="fa5"
+await FirebaseAuth.instance.signInWithEmailAndPassword(
+  email: email,
+  password: password,
+);
+```
+
+---
+
+### 🔹 Logout
+
+```dart id="fa6"
+await FirebaseAuth.instance.signOut();
+```
+
+---
+
+### 🔹 Feedback
+
+```dart id="fa7"
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(content: Text('Login Successful')),
+);
+```
+
+---
+
 ## ✅ Verification
 
-* App runs successfully (`flutter run`)
-* No Firebase errors in console
-* App visible in Firebase Console
+* Users successfully sign up & log in
+* Errors handled for invalid credentials
+* New users visible in Firebase Console → Authentication
 
 ---
 
 ## 📸 Screenshots (Add)
 
-* Firebase Console (app registered)
-* App UI showing successful setup
+* Login/Signup screen
+* Successful login message
+* Firebase Console (Users list)
 
 ---
 
 ## 🧠 Reflection
 
-### 🔹 Why use FlutterFire CLI?
+### 🔹 Why Firebase Auth?
 
-* Automates setup ⚡
-* Reduces manual errors
-* Supports multiple platforms
+* Secure authentication 🔐
+* No backend required
+* Easy integration with Flutter
 
 ---
 
 ### 🔹 Challenges faced
 
-* CLI path issues
-* Selecting correct Firebase project
+* Handling errors (wrong credentials)
+* Managing login/signup state
 
 ---
 
 ### 🔹 Future Scope
 
-* Firebase Auth (login/signup)
-* Firestore (real-time data)
-* Storage (file uploads)
+* Role-based access (Admin/User)
+* Google Sign-In integration
+* Firestore user profiles
 
 ---
 
 ## 🚀 Final Takeaway
 
-> FlutterFire CLI makes Firebase integration faster, cleaner, and scalable by automating configuration across platforms.
+> Firebase Authentication enables secure, scalable, and easy-to-implement user login systems in Flutter apps without building a custom backend.
 
 ---
