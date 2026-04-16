@@ -1,100 +1,150 @@
 
+---
 
-# 🚀 Multi-Screen Navigation in Flutter Using Navigator & Named Routes
+# 🎨 Responsive Layout in Flutter Using Row, Column & Container
 
 ## 📌 Project Overview
 
-This project demonstrates how to implement **multi-screen navigation** in a Flutter application using the `Navigator` class and **named routes**.
+This project demonstrates how to build a **responsive and flexible UI layout** in Flutter using core layout widgets:
 
-The app includes:
+* `Container` → for structure and styling
+* `Row` → for horizontal alignment
+* `Column` → for vertical stacking
 
-* 🏠 Home Screen
-* 📄 Details Screen
-
-Users can navigate smoothly between screens, showcasing a **scalable navigation structure** suitable for real-world applications like dashboards, login flows, and multi-step processes.
-
----
-
-# 🧠 Understanding Navigation in Flutter
-
-Flutter uses a **stack-based navigation system** managed by the `Navigator`.
-
-### 🔹 Core Concept
-
-> Each new screen is pushed onto a stack, and when navigating back, the top screen is popped off.
+The layout adapts seamlessly across different screen sizes using `MediaQuery` and `Expanded`, ensuring a consistent user experience on both mobile and tablet devices.
 
 ---
 
-## 🔄 Navigation Methods Used
+# 🧠 Understanding Core Layout Widgets
 
-| Method                  | Purpose                                   |
-| ----------------------- | ----------------------------------------- |
-| `Navigator.pushNamed()` | Navigate to a new screen using route name |
-| `Navigator.pop()`       | Return to previous screen                 |
+## 🔹 Container
 
----
+A `Container` is used to structure UI elements with:
 
-# 🏗️ Project Structure
+* Padding & margin
+* Background color
+* Width & height control
 
-```plaintext
-lib/
- ├── main.dart
- └── screens/
-      ├── home_screen.dart
-      └── details_screen.dart
+```dart id="c1"
+Container(
+  padding: EdgeInsets.all(16),
+  color: Colors.blueAccent,
+  child: Text('Hello, Flutter!'),
+)
 ```
 
 ---
 
-# 🏠 Home Screen Implementation
+## 🔹 Row (Horizontal Layout)
 
-```dart
-import 'package:flutter/material.dart';
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Home Screen')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/details');
-          },
-          child: Text('Go to Details'),
-        ),
-      ),
-    );
-  }
-}
+```dart id="c2"
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    Icon(Icons.home),
+    Icon(Icons.search),
+    Icon(Icons.person),
+  ],
+)
 ```
+
+👉 Used for horizontal alignment of elements
 
 ---
 
-# 📄 Details Screen Implementation
+## 🔹 Column (Vertical Layout)
 
-```dart
+```dart id="c3"
+Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text('Welcome!'),
+    SizedBox(height: 10),
+    ElevatedButton(onPressed: () {}, child: Text('Click Me')),
+  ],
+)
+```
+
+👉 Used for stacking elements vertically
+
+---
+
+# 🏗️ Layout Implementation
+
+## 📱 Screen: `responsive_layout.dart`
+
+This layout includes:
+
+* Header section
+* Two panels (left & right)
+* Responsive structure
+
+---
+
+## 💡 Full Implementation
+
+```dart id="c4"
 import 'package:flutter/material.dart';
 
-class DetailsScreen extends StatelessWidget {
+class ResponsiveLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final message =
-        ModalRoute.of(context)!.settings.arguments as String?;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    bool isTablet = screenWidth > 600;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Details Screen')),
-      body: Center(
+      appBar: AppBar(title: Text('Responsive Layout')),
+      body: Container(
+        padding: EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(message ?? 'No data received'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Back to Home'),
+            // Header
+            Container(
+              width: double.infinity,
+              height: 150,
+              color: Colors.lightBlueAccent,
+              child: Center(child: Text('Header Section')),
+            ),
+            SizedBox(height: 10),
+
+            // Responsive Body
+            Expanded(
+              child: isTablet
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Colors.amber,
+                            child: Center(child: Text('Left Panel')),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            color: Colors.greenAccent,
+                            child: Center(child: Text('Right Panel')),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Colors.amber,
+                            child: Center(child: Text('Top Panel')),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Expanded(
+                          child: Container(
+                            color: Colors.greenAccent,
+                            child: Center(child: Text('Bottom Panel')),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ],
         ),
@@ -106,142 +156,95 @@ class DetailsScreen extends StatelessWidget {
 
 ---
 
-# ⚙️ Route Configuration (`main.dart`)
+# 📱 Responsiveness Strategy
 
-```dart
-import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
-import 'screens/details_screen.dart';
+## 🔹 Using `MediaQuery`
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => HomeScreen(),
-        '/details': (context) => DetailsScreen(),
-      },
-    );
-  }
-}
+```dart id="c5"
+double screenWidth = MediaQuery.of(context).size.width;
+bool isTablet = screenWidth > 600;
 ```
+
+👉 Detects screen size dynamically
 
 ---
 
-# 🔄 Passing Data Between Screens
+## 🔹 Adaptive Layout Behavior
 
-### 🔹 Sending Data
-
-```dart
-Navigator.pushNamed(
-  context,
-  '/details',
-  arguments: 'Hello from Home!',
-);
-```
+| Screen Size   | Layout              |
+| ------------- | ------------------- |
+| Small devices | Vertical (`Column`) |
+| Large devices | Horizontal (`Row`)  |
 
 ---
 
-### 🔹 Receiving Data
+## 🔹 Using `Expanded`
 
-```dart
-final message =
-    ModalRoute.of(context)!.settings.arguments as String?;
-```
+* Ensures equal space distribution
+* Prevents overflow issues
+* Maintains layout balance
 
 ---
 
 # 📸 Screenshots (Add in README)
 
-Include the following:
+Include:
 
-* ✅ Home Screen
-* ✅ Details Screen
-* ✅ Navigation transition (before → after button click)
-
----
-
-# 🎥 Navigation Flow
-
-1. App starts → Home Screen loads
-2. User clicks “Go to Details”
-3. App navigates to Details Screen
-4. User clicks “Back to Home”
-5. App returns to Home Screen
-
-👉 Navigation is smooth and responsive using Flutter’s built-in routing system.
+* ✅ Mobile View (Vertical layout)
+* ✅ Tablet View (Horizontal layout)
+* ✅ Landscape mode
 
 ---
 
 # 🧠 Reflection
 
-## 🔹 What is the role of the Navigator in Flutter?
+## 🔹 Why is responsive design important?
 
-The `Navigator` is responsible for managing the **navigation stack of screens** in a Flutter app.
+Responsive design ensures that the app:
 
-* It controls how screens are added (`push`)
-* And how they are removed (`pop`)
+* Works across multiple devices 📱💻
+* Maintains usability and readability
+* Provides a consistent user experience
 
-👉 This allows smooth transitions and proper back navigation behavior.
+👉 Without responsiveness:
 
----
-
-## 🔹 Why are named routes preferred for larger apps?
-
-Named routes provide:
-
-### ✅ Better Organization
-
-* Centralized route definitions in one place
-
-### ✅ Cleaner Code
-
-* Simplifies navigation calls
-
-```dart
-Navigator.pushNamed(context, '/details');
-```
-
-### ✅ Scalability
-
-* Easy to add and manage multiple screens
-
-### ✅ Decoupling
-
-* Screens don’t directly depend on each other
+* UI may break ❌
+* Content may overflow ❌
 
 ---
 
-## 🔹 How does Flutter manage the navigation stack?
+## 🔹 Challenges Faced
 
-Flutter uses a **Last-In-First-Out (LIFO) stack system**:
+* Handling layout switching between devices
+* Avoiding overflow in smaller screens
+* Maintaining consistent spacing
 
-* New screens are **pushed** onto the stack
-* When navigating back, screens are **popped off**
+### 💡 Solution
 
-### 💡 Example Flow
+* Used `MediaQuery` for dynamic decisions
+* Used `Expanded` to distribute space properly
+* Avoided fixed widths/heights
 
-```
-HomeScreen → push → DetailsScreen
-DetailsScreen → pop → HomeScreen
-```
+---
 
-👉 This ensures:
+## 🔹 How do MediaQuery and Expanded help?
 
-* Efficient memory usage
-* Smooth user experience
+### ✅ MediaQuery
+
+* Detects screen size
+* Enables adaptive layouts
+
+### ✅ Expanded
+
+* Distributes available space evenly
+* Prevents layout breaking
 
 ---
 
 # 🚀 Final Takeaway
 
-> Flutter’s Navigator and named routes provide a structured and scalable approach to managing multi-screen navigation, ensuring smooth transitions, clean code architecture, and an intuitive user experience.
+> By combining `Row`, `Column`, and `Container` with responsive techniques like `MediaQuery` and `Expanded`, we can build flexible Flutter layouts that adapt smoothly across different devices and screen sizes.
 
 ---
+
 
