@@ -1,34 +1,28 @@
-# Firebase Cloud Messaging (FCM) Integration - Flutter
+# Firebase Authentication + Firestore Security Rules (Flutter)
 
 ## Project Overview
-This project integrates **Firebase Cloud Messaging (FCM)** into a Flutter application to receive push notifications in foreground, background, and terminated states.
+This Flutter project integrates **Firebase Authentication** and **Cloud Firestore** with **Security Rules** to protect user data.
 
-The app supports:
+Feature implemented: **Secure Profile**
 
-- Firebase setup with FlutterFire
-- Notification permission handling
-- Device token retrieval
-- Foreground message listener
-- Background message handling
-- Push notification testing from Firebase Console
+Each authenticated user can:
 
----
+- Sign up / Login
+- Create their own profile
+- Read their own profile
+- Update their own profile
 
-## Features Implemented
+Security enforced:
 
-✅ Firebase connected to Flutter app  
-✅ `firebase_messaging` package added  
-✅ Notification permissions requested  
-✅ FCM device token generated  
-✅ Foreground notifications handled  
-✅ Background notifications supported  
-✅ Push notifications received successfully  
+- Users cannot access another user’s profile
+- Unauthorized users cannot read/write data
 
 ---
 
-## Dependencies
+# Firebase Packages Used
 
 ```yaml
 dependencies:
   firebase_core: ^3.0.0
-  firebase_messaging: ^15.0.0
+  firebase_auth: ^5.0.0
+  cloud_firestore: ^5.0.0
