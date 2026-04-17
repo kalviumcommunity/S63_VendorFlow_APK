@@ -1,110 +1,102 @@
 
-
-## 🔍 Firestore Querying, Filtering & Sorting (Flutter)
+## 📤 Firebase Storage Media Upload (Flutter)
 
 ### 📌 Overview
 
-This project demonstrates how to **retrieve only required data from Cloud Firestore** using queries such as `where()`, `orderBy()`, and `limit()`. This improves performance, reduces unnecessary reads, and creates a cleaner user experience.
+This project demonstrates how to **pick an image from the device, upload it to Firebase Storage, retrieve the download URL, and display it inside the Flutter app**. Firebase Storage provides a secure and scalable solution for handling media files.
 
 ---
 
 ### ⚙️ Setup
 
-Added dependency:
+Added dependencies:
 
-```yaml id="jlwmzq"
+```yaml id="7z7cnq"
 dependencies:
-  cloud_firestore: ^5.0.0
+  firebase_storage: ^12.0.0
+  image_picker: ^1.0.0
 ```
 
-Firebase initialized successfully in the app.
+Ran:
+
+```bash id="6m9n0e"
+flutter pub get
+```
 
 ---
 
-### 🔎 Query Features Used
+### 🖼️ Pick Image from Gallery
 
-#### ✅ Filter with `where()`
+```dart id="tvq6lk"
+final ImagePicker picker = ImagePicker();
 
-```dart id="e6r9b7"
-.where('isCompleted', isEqualTo: false)
+final XFile? file =
+    await picker.pickImage(source: ImageSource.gallery);
 ```
 
-Shows only pending tasks.
-
-#### ✅ Sort with `orderBy()`
-
-```dart id="0n2j7r"
-.orderBy('priority')
-```
-
-Displays tasks in ascending priority order.
-
-#### ✅ Limit Results
-
-```dart id="e59j8u"
-.limit(10)
-```
-
-Loads only the first 10 documents for faster performance.
+This allows the user to choose an image from the device gallery.
 
 ---
 
-### 🖥️ StreamBuilder UI Example
+### ☁️ Upload Image to Firebase Storage
 
-```dart id="nhjlwm"
-StreamBuilder(
-  stream: FirebaseFirestore.instance
-      .collection('tasks')
-      .where('isCompleted', isEqualTo: false)
-      .orderBy('priority')
-      .limit(10)
-      .snapshots(),
-  builder: (context, snapshot) {
-    if (!snapshot.hasData) {
-      return Center(child: CircularProgressIndicator());
-    }
+```dart id="0hcltv"
+final fileName =
+    DateTime.now().millisecondsSinceEpoch.toString();
 
-    final docs = snapshot.data!.docs;
-
-    return ListView.builder(
-      itemCount: docs.length,
-      itemBuilder: (context, index) {
-        final task = docs[index];
-
-        return ListTile(
-          title: Text(task['title']),
-          subtitle: Text('Priority: ${task['priority']}'),
-        );
-      },
-    );
-  },
-);
+await FirebaseStorage.instance
+    .ref('uploads/$fileName.jpg')
+    .putFile(File(file!.path));
 ```
+
+The image is uploaded inside the `uploads/` folder in Firebase Storage.
+
+---
+
+### 🔗 Get Download URL
+
+```dart id="bl0l10"
+final url = await FirebaseStorage.instance
+    .ref('uploads/$fileName.jpg')
+    .getDownloadURL();
+```
+
+Used to access and display the uploaded image.
+
+---
+
+### 🖥️ Display Uploaded Image
+
+```dart id="l2pk4l"
+Image.network(url)
+```
+
+Shows the uploaded image instantly in the app UI.
 
 ---
 
 ### 🚀 Features Implemented
 
-* Filtered pending tasks only
-* Sorted tasks by priority
-* Limited results for better speed
-* Real-time UI updates using Firestore streams
+* Pick image from gallery
+* Upload image to Firebase Storage
+* Retrieve download URL
+* Display uploaded image in Flutter UI
+* Real-time visual feedback after upload
 
 ---
 
 ### 🧪 Testing
 
-Using Firebase Console:
+Verified that:
 
-* Added new tasks → appeared instantly
-* Changed priority → reordered automatically
-* Completed task → removed from filtered list
+* Image selected successfully
+* Upload completed without errors
+* File visible in Firebase Storage Console
+* Image displayed correctly in the app
 
 ---
 
 ### 🪞 Reflection
 
-Querying improves performance because the app fetches only necessary data instead of loading full collections. I selected filters based on real use cases such as pending tasks and priority sorting. The main challenge was Firestore index creation, which was solved using the generated console link.
-
----
+Firebase Storage is useful for media-heavy apps because it securely stores images, videos, and documents without managing custom servers. My final app can use uploads for profile pictures, product images, documents, or user posts. The main challenge was handling file permissions and path conversion, which was solved using `image_picker`.
 
