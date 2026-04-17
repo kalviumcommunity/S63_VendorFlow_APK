@@ -1,28 +1,21 @@
-# Firebase Authentication + Firestore Security Rules (Flutter)
+# Google Maps SDK Integration in Flutter
 
 ## Project Overview
-This Flutter project integrates **Firebase Authentication** and **Cloud Firestore** with **Security Rules** to protect user data.
+This Flutter project integrates **Google Maps SDK** to display an interactive map inside the app.
 
-Feature implemented: **Secure Profile**
+Feature implemented: **Location Preview**
 
-Each authenticated user can:
+Users can:
 
-- Sign up / Login
-- Create their own profile
-- Read their own profile
-- Update their own profile
-
-Security enforced:
-
-- Users cannot access another user’s profile
-- Unauthorized users cannot read/write data
+- Open a screen with embedded Google Map
+- View default location on load
+- Zoom in / Zoom out
+- Drag and explore map smoothly
 
 ---
 
-# Firebase Packages Used
+# Packages Used
 
 ```yaml
 dependencies:
-  firebase_core: ^3.0.0
-  firebase_auth: ^5.0.0
-  cloud_firestore: ^5.0.0
+  google_maps_flutter: ^2.6.0
