@@ -1,21 +1,34 @@
-You are required to integrate user location access into your Flutter application and display map markers (default or custom) on Google Maps. Your implementation must correctly request permissions, fetch the user’s GPS location, and place at least one marker on the map based on that position.
+You are required to build a complete CRUD (Create, Read, Update, Delete) workflow in your Flutter application using Firebase Authentication and Cloud Firestore. Your CRUD operations must be fully user-specific — meaning each user can only manage their own data.
 
 Your submission should include:
 
-A Flutter project with user location + marker integration.
-A Pull Request (PR) containing all related code changes.
+A Flutter project integrating UI + Firestore + Auth for full CRUD.
+A Pull Request (PR) containing all CRUD-related code changes.
 A video demonstration uploaded to Google Drive, with edit access enabled for all.
 Scenario-Based Task (Must Be Shown in Video Demo)
-Your app includes a feature called “Locate Me”, where users should be able to see their live position on the map along with a marker indicating their location.
+Your app includes a feature called “My Notes” where each authenticated user can create, view, edit, and delete their personal notes stored in Firestore.
 
-In your demo, you must:
+In your video, you must demonstrate:
 
-Request location permissions (Android/iOS).
+1. Authentication
+Sign in using Firebase Auth (Email/Password or Google).
+Show that a user must be authenticated before CRUD actions happen.
+2. Create
+Add a new note using the UI.
 
-Fetch the user’s current GPS coordinates using Geolocator.
+Note gets stored under:
 
-Display a Google Map that:
+/users/{uid}/items/{itemId}
+3. Read
+Display a list of notes belonging ONLY to the authenticated user.
+Show real-time updates using a StreamBuilder.
+4. Update
+Edit an existing note and show the change reflecting instantly.
+5. Delete
+Remove a note and show it disappearing from the list.
+6. Firestore Rules Verification
+(even brief is enough)
 
-Centers on the user’s current position,
-Allows zoom and pan,
-Shows a marker positioned at the user’s live location.
+match /users/{uid}/items/{itemId} {
+  allow read, write: if request.auth.uid == uid;
+}
