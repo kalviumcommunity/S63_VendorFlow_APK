@@ -1,10 +1,10 @@
 
 
-## ⚡ Firestore Real-Time Sync (Flutter)
+## 🔍 Firestore Querying, Filtering & Sorting (Flutter)
 
 ### 📌 Overview
 
-This project demonstrates how to use **Cloud Firestore real-time listeners** in Flutter. With `snapshots()` and `StreamBuilder`, the app UI updates instantly whenever data is added, edited, or deleted in Firestore — no manual refresh required.
+This project demonstrates how to **retrieve only required data from Cloud Firestore** using queries such as `where()`, `orderBy()`, and `limit()`. This improves performance, reduces unnecessary reads, and creates a cleaner user experience.
 
 ---
 
@@ -12,70 +12,68 @@ This project demonstrates how to use **Cloud Firestore real-time listeners** in 
 
 Added dependency:
 
-```yaml id="uk3x6o"
+```yaml id="jlwmzq"
 dependencies:
   cloud_firestore: ^5.0.0
 ```
 
-Firebase is initialized in `main.dart`.
+Firebase initialized successfully in the app.
 
 ---
 
-### 📡 Collection Real-Time Listener
+### 🔎 Query Features Used
 
-```dart id="9el0ww"
-FirebaseFirestore.instance
-    .collection('posts')
-    .snapshots();
+#### ✅ Filter with `where()`
+
+```dart id="e6r9b7"
+.where('isCompleted', isEqualTo: false)
 ```
 
-This triggers automatically when:
+Shows only pending tasks.
 
-* New document added
-* Existing document updated
-* Document deleted
+#### ✅ Sort with `orderBy()`
 
----
-
-### 📄 Document Real-Time Listener
-
-```dart id="q7fbws"
-FirebaseFirestore.instance
-    .collection('users')
-    .doc(userId)
-    .snapshots();
+```dart id="0n2j7r"
+.orderBy('priority')
 ```
 
-This updates when:
+Displays tasks in ascending priority order.
 
-* Field values change
-* Server timestamps refresh
-* Nested data changes
+#### ✅ Limit Results
+
+```dart id="e59j8u"
+.limit(10)
+```
+
+Loads only the first 10 documents for faster performance.
 
 ---
 
 ### 🖥️ StreamBuilder UI Example
 
-```dart id="0ud0cc"
+```dart id="nhjlwm"
 StreamBuilder(
-  stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+  stream: FirebaseFirestore.instance
+      .collection('tasks')
+      .where('isCompleted', isEqualTo: false)
+      .orderBy('priority')
+      .limit(10)
+      .snapshots(),
   builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
+    if (!snapshot.hasData) {
       return Center(child: CircularProgressIndicator());
     }
 
-    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-      return Center(child: Text('No records yet'));
-    }
-
-    final posts = snapshot.data!.docs;
+    final docs = snapshot.data!.docs;
 
     return ListView.builder(
-      itemCount: posts.length,
+      itemCount: docs.length,
       itemBuilder: (context, index) {
+        final task = docs[index];
+
         return ListTile(
-          title: Text(posts[index]['title']),
-          subtitle: Text(posts[index]['content']),
+          title: Text(task['title']),
+          subtitle: Text('Priority: ${task['priority']}'),
         );
       },
     );
@@ -87,26 +85,26 @@ StreamBuilder(
 
 ### 🚀 Features Implemented
 
-* Instant UI refresh using Firestore streams
-* Real-time collection updates
-* Loading and empty state handling
-* Dynamic `ListView` rendering
+* Filtered pending tasks only
+* Sorted tasks by priority
+* Limited results for better speed
+* Real-time UI updates using Firestore streams
 
 ---
 
 ### 🧪 Testing
 
-Verified using Firebase Console:
+Using Firebase Console:
 
-* Added new document → shown instantly in app
-* Edited document → UI updated live
-* Deleted document → removed immediately
+* Added new tasks → appeared instantly
+* Changed priority → reordered automatically
+* Completed task → removed from filtered list
 
 ---
 
 ### 🪞 Reflection
 
-Real-time sync creates a smooth and modern user experience because users always see the latest data automatically. It is useful for chat apps, dashboards, notifications, and collaborative tools. The biggest challenge was handling loading and empty states properly, which was solved using `StreamBuilder`.
+Querying improves performance because the app fetches only necessary data instead of loading full collections. I selected filters based on real use cases such as pending tasks and priority sorting. The main challenge was Firestore index creation, which was solved using the generated console link.
 
 ---
 
