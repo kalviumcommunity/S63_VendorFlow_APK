@@ -1,188 +1,51 @@
-# Flutter Complex Form Validation – Profile Details Form
+# QuickTabs Navigation
 
-## Project Overview
-This Flutter project implements a **multi-field validated form** using `Form`, `TextFormField`, and `GlobalKey<FormState>`.
+A Flutter app demonstrating tab-based navigation using `BottomNavigationBar` with 3 screens: Home, Explore, and Profile. It uses `IndexedStack` to preserve screen state while switching tabs.
 
-Feature implemented: **Profile Details Form**
+## Features
 
-Users must complete all fields correctly before submission.
+- BottomNavigationBar with 3 tabs
+- Active tab highlight updates correctly
+- Smooth instant switching between screens
+- Screen state preserved using IndexedStack
+- Separate UI for each tab
 
----
+## Main Code
 
-# Validations Included
+```dart
+int _currentIndex = 0;
 
-| Field | Validation Rule |
-|------|----------------|
-| Full Name | Required + Minimum length |
-| Email | Valid email format |
-| Phone Number | Exactly 10 digits |
-| Password | Minimum 8 characters |
-| Confirm Password | Must match password |
+final List<Widget> _pages = [
+  HomeScreen(),
+  ExploreScreen(),
+  ProfileScreen(),
+];
 
----
-
-# Key Flutter Concepts Used
-
-- `Form`
-- `TextFormField`
-- `GlobalKey<FormState>`
-- `validator`
-- `TextEditingController`
-- `SnackBar`
-
----
-
-# Main Screen Code
-
-## `profile_form_screen.dart`
-
-```dart id="code001"
-import 'package:flutter/material.dart';
-
-class ProfileFormScreen extends StatefulWidget {
-  @override
-  State<ProfileFormScreen> createState() =>
-      _ProfileFormScreenState();
-}
-
-class _ProfileFormScreenState
-    extends State<ProfileFormScreen> {
-
-  final _formKey = GlobalKey<FormState>();
-
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile Details Form"),
+Scaffold(
+  body: IndexedStack(
+    index: _currentIndex,
+    children: _pages,
+  ),
+  bottomNavigationBar: BottomNavigationBar(
+    currentIndex: _currentIndex,
+    onTap: (index) {
+      setState(() {
+        _currentIndex = index;
+      });
+    },
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: "Home",
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-
-              TextFormField(
-                controller: nameController,
-                decoration:
-                    InputDecoration(labelText: "Full Name"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Full Name required";
-                  }
-                  if (value.length < 3) {
-                    return "Minimum 3 characters";
-                  }
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 12),
-
-              TextFormField(
-                controller: emailController,
-                decoration:
-                    InputDecoration(labelText: "Email"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Email required";
-                  }
-
-                  if (!RegExp(
-                    r'^[^@]+@[^@]+\.[^@]+',
-                  ).hasMatch(value)) {
-                    return "Enter valid email";
-                  }
-
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 12),
-
-              TextFormField(
-                controller: phoneController,
-                keyboardType: TextInputType.number,
-                decoration:
-                    InputDecoration(labelText: "Phone"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Phone required";
-                  }
-
-                  if (value.length != 10) {
-                    return "Phone must be 10 digits";
-                  }
-
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 12),
-
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration:
-                    InputDecoration(labelText: "Password"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Password required";
-                  }
-
-                  if (value.length < 8) {
-                    return "Minimum 8 characters";
-                  }
-
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 12),
-
-              TextFormField(
-                controller: confirmController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Confirm Password",
-                ),
-                validator: (value) {
-                  if (value !=
-                      passwordController.text) {
-                    return "Passwords do not match";
-                  }
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 25),
-
-              ElevatedButton(
-                onPressed: submitForm,
-                child: Text("Save Profile"),
-              )
-            ],
-          ),
-        ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.explore),
+        label: "Explore",
       ),
-    );
-  }
-
-  void submitForm() {
-    if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text("Profile Saved Successfully"),
-        ),
-      );
-    }
-  }
-}
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: "Profile",
+      ),
+    ],
+  ),
+);
